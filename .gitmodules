@@ -1,0 +1,3 @@
+[submodule "LyricsAlignment-MTL"]
+	path = LyricsAlignment-MTL
+	url = https://github.com/bensapirstein/LyricsAlignment-MTL.git
