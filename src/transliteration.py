@@ -3,151 +3,12 @@ import tqdm
 import string 
 from src.az_openai import create_client, generate_response
 
-INSTRUCTIONS_AR_HB = """
-Task:
-Perform romanization of Arabic or Hebrew song lyrics.
-Convert Arabic or Hebrew song lyrics into a phonetic transliteration using only the english alphabet, an apostrophe ('), spaces, and new lines. 
-The goal is to preserve the original phonology as closely as possible while using only the english writing system.
+languages = ['Arabic Hebrew', 'French', 'German', 'Spanish']
+instructions = {}
 
-Guidelines:
-No numbers – Avoid using numbers like "2," "3," or "7" for Arabic or Hebrew sounds. Instead, use the closest english letters.
-Preserve pronunciation – The transliteration should reflect how the lyrics are sung, maintaining the phonetic structure of the original language.
-Use apostrophes ('') – Represent sounds like:
-Arabic: ع (ʿayn) and ء (hamza) → '
-Hebrew: ע (ʿayin) and א (aleph) → ' when pronounced
-Words must start with a letter – Do not start words with apostrophes. Use the closest english letter instead.
-No extra characters – Do not use diacritics, underscores, or special symbols beyond apostrophes.
-Keep word boundaries – Maintain spacing similar to the original lyrics.
-Use lowercase letters for the transliteration.
-
-Examples (Arabic):
-Input:
-حبيبي يا نور العين يا ساكن خيالي
-عاشق بقالي سنين ولا غيرك في بالي
-أجمل عيون فى الكون أنا شفتها
-الله عليك، الله على سحرها
-
-Output:
-habibi ya nour el-ain, ya sakhen khayali
-aashiq ba'ali seneen wala ghayrak fi bali
-ajmal a'yun fil kawn ana shuftuha
-allah aalayk, allah ala sahriha
-
-Input:
-مسيطرة، همشيك مسطرة
-هخليك لو شوفت في شارع بنت تبص لورا
-أيوه أنا مسيطرة، يا حتة سكرة
-طول ما أنت معايا تمشي على هوايا أنا متكبرة
-
-Output:
-mesytara, hamshek mastara
-hakhlek law shoft fi share'a bent tebos le-wara
-aywa ana mesytara ya hetet sokra
-toul ma enta ma’aya temshi aala hawaya, ana motakabera
-
-Input:
-مافيش حاجه تيجي كده
-إهدا حبيبي كده وإرجع زي زمان
-يابني اسمعني هتدلعني
-تاخد عيني كمان
-
-Output:
-ma feesh haga teggy keda
-ihda habiby keda, w ergaa' zay zaman
-ya ebni isma'ni, hatdala'any
-takhod einy kaman
-
-Examples (Hebrew):
-Input:
-טמפרטורה הזיה, השמש עושה לה טוב
-אמא שלה, ממרוקו
-אבא מצפון הים, אפשר להרגיש את הקור
-משאללה, איך יצא לו טוב
-
-Output:
-temperatura haziya, hashemesh osa la tov
-ima shela, me'marocco
-aba mitzafon hayam, efshar lehargish ta'kor
-mashallah, eich yatz’a lo tov
-
-Input:
-שמור וזכור בדיבור אחד
-השמיענו אל המיוחד
-אדוני אחד ושמו אחד
-לשם ולתפארת ולתהילה
-לכה דודי לקראת כלה
-פני שבת נקבלה
-
-Output:
-shamor v’zachor b’dibur echad
-hishmi’anu el ha’myuchad
-adonai echad u’shmo echad
-l’shem u’l’tiferet v’lit’hillah
-lecha dodi likrat kallah
-p'nei shabbat n'kabela
-
-Input:
-היא מרגישה שנפתח לה המזל
-פגשה אחד, גבר-גבר ורג'אל
-והיא תלחש לו, מה היא תלחש לו-
-"קח אותי על הגמל"
-
-Output:
-hi margisha sheniftach la hamazal
-pagsha echad, gever gever verajal
-vehi tilchash lo, ma hi tilchash lo
-"kach oti al hagamal"
-
-I repeat, do not start words with apostrophes. If a word starts with ع or ע, use the closest english letter.
-For example: 
-Input:
-عينيك
-Output:
-ainayk
-
-Input:
-עיניים
-Output:
-ayinayim
-
-Input:
-على
-Output:
-ala
-
-Input:
-על
-Output:
-al
-
-Input:
-عنب
-Output:
-anab
-
-Input:
-عليك
-Output:
-alayk
-
-Input:
-عليه
-Output:
-alayh
-"""
-
-INSTRUCTIONS_FR = """
-Task:
-Perform romanization of French song lyrics.
-Convert French song lyrics into a phonetic transliteration using only the english alphabet, an apostrophe ('), spaces, and new lines.
-The goal is to preserve the original phonology as closely as possible while using only the english writing system.
-
-Guidelines:
-
-
-Examples:
-
-"""
+for lang in languages:
+    with open(f'src/transliteration_guidelines/{lang}.txt', 'r') as f:
+        instructions[lang] = f.read()
 
 def filter_content(content):
     # Convert content to lowercase and filter only ASCII lowercase letters, apostrophes, or spaces, keeping newlines
@@ -173,18 +34,27 @@ def save_lyrics_files(dst_folder, filename, filtered_content):
     with open(words_file_path, 'w') as words_file:
         words_file.write(words_content)
 
-def process_lyrics(lyrics_src_folder, lang):
-    translations = {
-        'sem': INSTRUCTIONS_AR_HB,
-        'fr': INSTRUCTIONS_FR
-    }
-    instructions = translations.get(lang)
-    if instructions is None:
+def verify_lyrics_file(src_filename, dst_filename):
+    with open(src_filename, 'r') as src_file:
+        src_content = src_file.read()
+        src_words = src_content.split()
+
+    with open(dst_filename.replace('.txt', '.words.txt'), 'r') as dst_file:
+        dst_content = dst_file.read()
+        dst_words = dst_content.split()
+
+    return len(src_words) == len(dst_words)
+    
+            
+def process_lyrics(data_folder, lang):
+    instructions_for_lang = instructions.get(lang)
+    if instructions_for_lang is None:
         raise ValueError(f'Language {lang} not supported. Please provide instructions for the language.')
     
     client = create_client()
-    dst_lyrics_folder = 'lyrics'
-    lyrics_rom_folder = "lyrics_rom"
+    lyrics_src_folder = os.path.join(data_folder, 'lyrics_src')
+    dst_lyrics_folder = os.path.join(data_folder, 'lyrics')
+    lyrics_rom_folder = os.path.join(data_folder, 'lyrics_rom')
 
     # Create the destination folders if they do not exist
     if not os.path.exists(dst_lyrics_folder):
@@ -192,21 +62,55 @@ def process_lyrics(lyrics_src_folder, lang):
     if not os.path.exists(lyrics_rom_folder):
         os.makedirs(lyrics_rom_folder)
 
+    failed_lyrics = []
+
     for filename in tqdm.tqdm(os.listdir(lyrics_src_folder)):
         if filename.endswith(".txt"):
             file_path = os.path.join(lyrics_src_folder, filename)
+            rom_file_path = os.path.join(lyrics_rom_folder, filename)
+            dst_filename = os.path.join(dst_lyrics_folder, filename)
+            if os.path.exists(dst_filename):
+                print(f"Lyrics file {filename} already processed. Skipping.")
+                continue
+            
             with open(file_path, "r") as f:
                 lyrics = f.read()
 
-            # Generate romanized lyrics
-            romanized_lyrics = generate_response(client, lyrics, instructions)
-            rom_file_path = os.path.join(lyrics_rom_folder, filename)
-            with open(rom_file_path, "w") as f:
-                f.write(romanized_lyrics)
+            # if romanized lyrics doesn't exist
+            if not os.path.exists(rom_file_path):
+                # Generate romanized lyrics
+                try:
+                    romanized_lyrics = generate_response(client, lyrics, instructions_for_lang)
+                except Exception as e:
+                    print(f"Error processing lyrics file {filename}: {e}")
+                    failed_lyrics.append(filename)
+                    continue
+
+                if not romanized_lyrics:
+                    print(f"Lyrics file {filename} processing failed. No response from the API.")
+                    failed_lyrics.append(filename)
+                    continue
+
+                with open(rom_file_path, "w") as f:
+                    f.write(romanized_lyrics)
+            else:
+                with open(rom_file_path, "r") as f:
+                    romanized_lyrics = f.read()
 
             # Filter and save structured lyrics
             filtered_content = filter_content(romanized_lyrics)
             save_lyrics_files(dst_lyrics_folder, filename, filtered_content)
+            if not verify_lyrics_file(file_path, os.path.join(dst_lyrics_folder, filename)):
+                print(f"Lyrics file {filename} processing failed.")
+                failed_lyrics.append(filename)
+                # remove the failed files
+                os.remove(dst_filename)
+                os.remove(dst_filename.replace('.txt', '.words.txt'))
+                os.remove(rom_file_path)
 
     print("Lyrics processing complete.")
-
+    if failed_lyrics:
+        print("The following lyrics files failed to process:")
+        print({lang : failed_lyrics})
+    else:
+        print("All lyrics files processed successfully.")

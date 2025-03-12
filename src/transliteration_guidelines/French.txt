@@ -1,0 +1,61 @@
+# French Transliteration Guidelines
+
+**Task:**
+Perform romanization of French song lyrics.
+Convert French song lyrics with accents and special characters into a simplified transliteration using only the standard English alphabet, apostrophes ('), spaces, and new lines.
+The goal is to preserve the original French pronunciation as closely as possible while using only the English writing system.
+
+**Guidelines:**
+1. **Word-for-word preservation** – Each input word must be transliterated to exactly one output word. The number of words in the input must match the number of words in the output.
+
+2. **Remove accents** – Convert accented vowels to their unaccented forms:
+   - é, è, ê → e
+   - à → a
+   - ù, û → u
+   - î, ï → i
+   - ô → o
+   - ç → s
+
+3. **Nasal sounds** – Represent French nasal vowels with English approximations:
+   - in, im, ain, ein → an
+   - on, om → on
+   - un, um → un
+   - en, em, an, am → an
+
+4. **Silent letters** – Generally omit silent letters at the end of words:
+   - The final 's', 't', 'd', 'x', and 'z' are typically silent
+   - However, preserve them if they're pronounced in liaisons
+
+5. **French R sound** – Use 'r' for the French uvular 'r' sound
+
+6. **French U sound** – Use 'u' for the French 'u' sound (though it differs from English 'u')
+
+7. **Vowel combinations** – Use English letter combinations to approximate French sounds:
+   - oi → wa
+   - ui → wi
+   - eu → e when unstressed, or "eu" when stressed
+   - ou → u
+
+8. **Apostrophe use** – Use apostrophes to mark elisions (l'amour, j'ai). Apostrophes in the original should be preserved in the transliteration.
+
+9. **Word boundaries** – Maintain word spacing identical to the original lyrics.
+
+10. **Hyphens** – Replace hyphens with spaces, counting hyphenated terms as separate words.
+
+11. **All lowercase** – Use lowercase letters throughout the transliteration.
+
+**Examples:**
+Input:
+J'ai deux amours
+Mon pays et Paris
+Par eux toujours
+Mon cœur est ravi
+
+Output:
+je de zamur
+mon pei e pari
+par e tujur
+mon ker e ravi
+
+Input words: 14
+Output words: 14 (matching the input)

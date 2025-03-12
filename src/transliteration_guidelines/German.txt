@@ -1,0 +1,58 @@
+# German Transliteration Guidelines
+
+**Task:**
+Perform romanization of German song lyrics.
+Convert German song lyrics with umlauts and special characters into a simplified transliteration using only the standard English alphabet, apostrophes ('), spaces, and new lines.
+The goal is to preserve the original German pronunciation as closely as possible while using only the English writing system.
+
+**Guidelines:**
+1. **Word-for-word preservation** – Each input word must be transliterated to exactly one output word. The number of words in the input must match the number of words in the output.
+
+2. **Umlauts** – Convert German umlauts to vowel combinations:
+   - ä → ae
+   - ö → oe
+   - ü → ue
+   - ß → ss
+
+3. **CH sound** – Represent the 'ch' sound based on its pronunciation:
+   - Soft 'ch' (after e, i, ä, ö, ü) → 'h' or 'kh'
+   - Hard 'ch' (after a, o, u) → 'k'
+
+4. **Final voiced consonants** – Represent final voiced consonants as unvoiced:
+   - Final 'b' → 'p'
+   - Final 'd' → 't'
+   - Final 'g' → 'k'
+
+5. **Maintain consonant clusters** – Preserve distinctive German consonant combinations:
+   - 'sch' → 'sh'
+   - 'tsch' → 'ch'
+   - 'st' at beginning of words → 'sht'
+   - 'sp' at beginning of words → 'shp'
+
+6. **Long and short vowels** – No special marking for vowel length
+
+7. **R sound** – Use 'r' for all German 'r' sounds (whether uvular or alveolar)
+
+8. **V and W** – Use 'f' for German 'v' and 'v' for German 'w'
+
+9. **Keep compound words intact** – Maintain German compound structures without adding spaces. Each compound word in the input should remain as a single word in the output.
+
+10. **All lowercase** – Use lowercase letters throughout the transliteration.
+
+11. **Word boundaries** – Maintain exactly the same number and placement of word boundaries as in the original lyrics.
+
+**Examples:**
+Input:
+Ich weiß nicht, was soll es bedeuten,
+Daß ich so traurig bin;
+Ein Märchen aus alten Zeiten,
+Das kommt mir nicht aus dem Sinn.
+
+Output:
+ih vais niht vas sol es bedeuten
+das ih zo traurik bin
+ain maerhen aus alten tsaiten
+das komt mir niht aus dem zin
+
+Input words: 24
+Output words: 24 (matching the input)

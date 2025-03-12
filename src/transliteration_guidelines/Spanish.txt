@@ -1,0 +1,66 @@
+# Spanish Transliteration Guidelines
+
+**Task:**
+Perform romanization of Spanish song lyrics.
+Convert Spanish song lyrics with accent marks and special characters into a simplified transliteration using only the standard English alphabet, apostrophes ('), spaces, and new lines.
+The goal is to preserve the original Spanish pronunciation as closely as possible while using only the English writing system.
+
+**Guidelines:**
+1. **Word-for-word preservation** – Each input word must be transliterated to exactly one output word. The number of words in the input must match the number of words in the output.
+
+2. **Remove accent marks** – Convert accented vowels to their unaccented forms:
+   - á → a
+   - é → e
+   - í → i
+   - ó → o
+   - ú → u
+   - ü → u
+
+3. **Special characters** – Convert Spanish-specific characters:
+   - ñ → ny
+   - ¿ and ¡ → omit completely
+
+4. **B and V sounds** – Both are pronounced similarly in Spanish, use the same letter as the original.
+
+5. **Strong R and RR** – Represent the Spanish trilled 'r' and 'rr':
+   - Initial 'r' → r
+   - 'rr' → r
+
+6. **H is silent** – Omit silent 'h' in transliteration except in 'ch'.
+
+7. **C and Z sounds** – Convert based on pronunciation:
+   - 'c' before e, i → s (in most Spanish dialects)
+   - 'c' before a, o, u → k
+   - 'z' → s (in most Spanish dialects)
+
+8. **LL and Y sounds** – Represent the Spanish 'll' and 'y' sounds:
+   - 'll' → y
+   - 'y' → y
+
+9. **G and J sounds** – Convert based on pronunciation:
+   - 'g' before e, i → h
+   - 'j' → h
+
+10. **QU sound** – Convert 'qu' to 'k'.
+
+11. **GU before E and I** – Convert 'gu' before 'e' and 'i' to 'g'.
+
+12. **Word boundaries** – Maintain exactly the same number and placement of word boundaries as in the original lyrics.
+
+13. **All lowercase** – Use lowercase letters throughout the transliteration.
+
+**Examples:**
+Input:
+Voy a reír, voy a bailar
+Vivir mi vida, la la la la
+Voy a reír, voy a gozar
+Vivir mi vida, la la la la
+
+Output:
+boy a reir boy a bailar
+bibir mi bida la la la la
+boy a reir boy a gosar
+bibir mi bida la la la la
+
+Input words: 26
+Output words: 26 (matching the input)
