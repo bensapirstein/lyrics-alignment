@@ -1,11 +1,8 @@
 # lyrics-alignment
 A tool for real-time lyrics alignment and visualization, integrating audio processing, word-level synchronization, and interactive variable font typography.
 
-## Installation
-To install the necessary dependencies, run:
-```bash
-pip install -r requirements.txt
-```
+## Drive Link
+https://drive.google.com/drive/folders/1m14VjykKCBqkT0me7VN_ocM5BrsWKTIs?usp=sharing
 
 ## Notebooks
 - **download_music.ipynb:** Downloads audio from YouTube URLs.
