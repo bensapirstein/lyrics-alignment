@@ -33,6 +33,8 @@ def create_alignment_midi(mp3_file, lyrics_file, alignment_csv, output_midi, bpm
             word, start_time, end_time = words[i], float(row[0]), float(row[1])
             aligned_words.append((word, start_time, end_time))
 
+    num_words = len(aligned_words)
+
     # Create MIDI file
     mid = MidiFile(type=1)
 
@@ -60,7 +62,10 @@ def create_alignment_midi(mp3_file, lyrics_file, alignment_csv, output_midi, bpm
 
     # Add notes for each word
     last_end_time = 0
-    for word, start_time, end_time in aligned_words:
+    for i, (word, start_time, end_time) in enumerate(aligned_words):
+        # break after 64 notes
+        if i == 64:
+            break
         # Calculate note length in MIDI ticks
         start_time_ticks = int((start_time / 60.0) * bpm * ticks_per_beat)
         end_time_ticks = int((end_time / 60.0) * bpm * ticks_per_beat)
@@ -69,9 +74,9 @@ def create_alignment_midi(mp3_file, lyrics_file, alignment_csv, output_midi, bpm
         # Calculate delta time from previous note
         delta_ticks = start_time_ticks - last_end_time if last_end_time > 0 else start_time_ticks
 
-        # Assign a MIDI note number (you can use different notes for different purposes)
-        # Using middle C (60) for simplicity
-        note_number = 60
+        
+        # Assign a MIDI note number
+        note_number = 60 + (i % 16)
 
         # Add note on event
         track.append(Message('note_on', note=note_number, velocity=64, time=delta_ticks))
@@ -97,7 +102,7 @@ if __name__ == "__main__":
     base_dir = "data_pipeline/Semitic"
     title = "A-WA - ＂Hana Mash Hu Al Yaman＂ (Official Video)"
     artist = "A-WA"
-    model = "baseline"
+    model = "bdr_MTL"
     alignment_csv = os.path.join(base_dir, "predictions_{model}/{title}_align.csv".format(title=title, model=model))
     lyrics_file = os.path.join(base_dir, "lyrics/{title}.words.txt".format(title=title))
     mp3_file = os.path.join(base_dir, "mp3/{title}.mp3".format(title=title))
