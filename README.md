@@ -7,6 +7,7 @@ A tool for real-time lyrics alignment and visualization, integrating audio proce
 - **prepare_dali.ipynb:** Aimed to download DALI data and separate it, but was computationally expensive.
 - **prepare_lyrics.ipynb:** Transliterates and formats lyrics to the input format.
 - **evaluate.ipynb:** Evaluates the results, compares predictions to ground truth, computes metrics, and plots graphs.
+- **pipeline.ipynb:** Implements a full pipeline to download a song from YouTube, separate the vocals, process the lyrics, and generate a MIDI file.
 
 ## Scripts
 - **predict_MTL.sh:** Runs experiments on German, Spanish, French, Semitic languages (Arabic and Hebrew), and English for validating versus the original paper.
